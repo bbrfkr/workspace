@@ -1,5 +1,6 @@
 FROM mcr.microsoft.com/devcontainers/base:noble
 
+# install program languages
 RUN apt update && \
     # for python
     apt-get install -y build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev \
@@ -32,3 +33,9 @@ ENV PATH=/pyenv/shims:/rbenv/shims:/nodenv/shims:$PATH
 RUN pyenv global 3.11
 RUN rbenv global 3.3.8
 RUN nodenv global 20.19.0
+
+# install docker cli
+RUN wget -O docker.tgz https://download.docker.com/linux/static/stable/x86_64/docker-28.1.1.tgz && \
+    tar xvfz docker.tgz && \
+    mv docker/docker /usr/local/bin && \
+    rm -rf docker
