@@ -39,3 +39,8 @@ RUN wget -O docker.tgz https://download.docker.com/linux/static/stable/x86_64/do
     tar xvfz docker.tgz && \
     mv docker/docker /usr/local/bin && \
     rm -rf docker
+
+# install pip packages
+COPY requirements.txt .
+RUN pip install -r requirements.txt && rm -f requirements.txt && \
+    pip uninstall -y python-zaqarclient
