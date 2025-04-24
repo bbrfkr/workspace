@@ -1,7 +1,8 @@
 FROM mcr.microsoft.com/devcontainers/base:noble
 
-# install program languages
-RUN apt update && \
+# root user configuration
+## install language dependencies
+RUN apt-get update && \
     # for python
     apt-get install -y build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev \
                        libsqlite3-dev curl git libncursesw5-dev xz-utils \
@@ -13,34 +14,51 @@ RUN apt update && \
     # for nodejs
     apt-get install -y python3 g++-12 gcc-12 make python3-pip
 
-RUN git clone --depth 1 https://github.com/pyenv/pyenv /pyenv
-RUN git clone --depth 1 https://github.com/rbenv/rbenv /rbenv && \
-    git clone --depth 1 https://github.com/rbenv/ruby-build.git /rbenv/plugins/ruby-build
-RUN git clone --depth 1 https://github.com/nodenv/nodenv /nodenv && \
-    git clone --depth 1 https://github.com/nodenv/node-build.git /nodenv/plugins/node-build
+# install docker
+RUN apt-get update && \
+    apt-get install -y ca-certificates curl && \
+    install -m 0755 -d /etc/apt/keyrings && \
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc && \
+    chmod a+r /etc/apt/keyrings/docker.asc && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" \
+        > /etc/apt/sources.list.d/docker.list && \
+    apt-get update && \
+    apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
-ENV PATH=/pyenv/bin:/rbenv/bin:/nodenv/bin:$PATH
-ENV PYENV_ROOT=/pyenv
-ENV RBENV_ROOT=/rbenv
-ENV NODENV_ROOT=/nodenv
+# vscode user configuration
+## create the user
+ARG USER
+RUN useradd --home-dir /home/$USER --create-home $USER\
+    && echo $USER ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USER \
+    && chmod 0440 /etc/sudoers.d/$USER \
+    && cp /home/vscode/.bashrc /home/$USER \
+    && usermod -aG docker $USER
+
+## install language
+RUN git clone --depth 1 https://github.com/pyenv/pyenv /var/lib/pyenv
+RUN git clone --depth 1 https://github.com/rbenv/rbenv /var/lib/rbenv && \
+    git clone --depth 1 https://github.com/rbenv/ruby-build.git /var/lib/rbenv/plugins/ruby-build
+RUN git clone --depth 1 https://github.com/nodenv/nodenv /var/lib/nodenv && \
+    git clone --depth 1 https://github.com/nodenv/node-build.git /var/lib/nodenv/plugins/node-build
+
+RUN chown $USER:$USER -R /var/lib/pyenv /var/lib/rbenv /var/lib/nodenv
+
+ENV PATH=/var/lib/pyenv/bin:/var/lib/rbenv/bin:/var/lib/nodenv/bin:$PATH
+ENV PYENV_ROOT=/var/lib/pyenv
+ENV RBENV_ROOT=/var/lib/rbenv
+ENV NODENV_ROOT=/var/lib/nodenv
 
 RUN pyenv install 3.11
 RUN rbenv install 3.3.8
 RUN nodenv install 20.19.0
 
-ENV PATH=/pyenv/shims:/rbenv/shims:/nodenv/shims:$PATH
+ENV PATH=/var/lib/pyenv/shims:/var/lib/rbenv/shims:/var/lib/nodenv/shims:$PATH
 
-RUN pyenv global 3.11
-RUN rbenv global 3.3.8
-RUN nodenv global 20.19.0
+RUN pyenv global 3.11 && rbenv global 3.3.8 && nodenv global 20.19.0
 
-# install docker cli
-RUN wget -O docker.tgz https://download.docker.com/linux/static/stable/x86_64/docker-28.1.1.tgz && \
-    tar xvfz docker.tgz && \
-    mv docker/docker /usr/local/bin && \
-    rm -rf docker
-
-# install pip packages
+## install pip packages
 COPY requirements.txt .
 RUN pip install -r requirements.txt && rm -f requirements.txt && \
     pip uninstall -y python-zaqarclient
+
+ENTRYPOINT [ "dockerd" ]
