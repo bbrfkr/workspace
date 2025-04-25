@@ -1,5 +1,5 @@
 {
-	"name": "workspace-environment",
+	"name": "workspace-with-gpu",
 	"build": {		  
 		"dockerfile": "Dockerfile",
 		"context": ".",
@@ -9,6 +9,9 @@
 	},
 	"customizations": {
 		"vscode": {
+			"settings": {
+				"rubyLsp.bundleGemfile": ".devcontainer/with_gpu/Gemfile"
+			},
 			"extensions": [
 				"rooveterinaryinc.roo-cline",
 				"ms-azuretools.vscode-docker",
@@ -28,5 +31,9 @@
 	"containerUser": "root",
 	"remoteUser": "${localEnv:USER}",
 	"overrideCommand": false,
-	"privileged": true
+	"privileged": true,
+	"runArgs": [
+		"--gpus",
+		"all"
+	]
 }

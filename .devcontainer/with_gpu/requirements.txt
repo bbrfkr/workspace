@@ -1,3 +1,4 @@
+# openstack client
 openstackclient
 python-barbicanclient
 python-designateclient
@@ -6,7 +7,10 @@ python-magnumclient
 python-manilaclient
 python-octaviaclient
 python-troveclient
+
+# python tools
 black
 isort
 mypy
 flake8
+poetry
