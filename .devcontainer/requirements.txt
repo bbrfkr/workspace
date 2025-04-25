@@ -6,3 +6,7 @@ python-magnumclient
 python-manilaclient
 python-octaviaclient
 python-troveclient
+black
+isort
+mypy
+flake8

@@ -12,7 +12,9 @@
 			"extensions": [
 				"rooveterinaryinc.roo-cline",
 				"ms-azuretools.vscode-docker",
-				"ms-python.python"
+				"ms-python.python",
+				"ms-python.black-formatter",
+				"shopify.ruby-extensions-pack"
 			]
 		}
 	},

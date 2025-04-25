@@ -61,4 +61,8 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt && rm -f requirements.txt && \
     pip uninstall -y python-zaqarclient
 
+## install gem packages
+COPY Gemfile .
+RUN gem install bundle && bundle install
+
 ENTRYPOINT [ "dockerd" ]
