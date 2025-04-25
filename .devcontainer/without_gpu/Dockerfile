@@ -14,7 +14,7 @@ RUN apt-get update && \
     # for nodejs
     apt-get install -y python3 g++-12 gcc-12 make python3-pip
 
-# install docker
+## install docker
 RUN apt-get update && \
     apt-get install -y ca-certificates curl && \
     install -m 0755 -d /etc/apt/keyrings && \
@@ -24,6 +24,13 @@ RUN apt-get update && \
         > /etc/apt/sources.list.d/docker.list && \
     apt-get update && \
     apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+## install terraform and packer
+RUN apt-get update && apt-get install -y gnupg software-properties-common && \
+    wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor > /usr/share/keyrings/hashicorp-archive-keyring.gpg && \
+    echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" \
+        > /etc/apt/sources.list.d/hashicorp.list && \
+    apt-get update && apt-get install terraform packer
 
 # vscode user configuration
 ## create the user

@@ -1,30 +1,4 @@
 FROM mcr.microsoft.com/devcontainers/base:noble
-
-# root user configuration
-## install language dependencies
-RUN apt-get update && \
-    # for python
-    apt-get install -y build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev \
-                       libsqlite3-dev curl git libncursesw5-dev xz-utils \
-                       tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev && \
-    # for ruby
-    apt-get install -y autoconf patch build-essential rustc libssl-dev \
-                       libyaml-dev libreadline6-dev zlib1g-dev libgmp-dev libncurses5-dev \
-                       libffi-dev libgdbm6 libgdbm-dev libdb-dev uuid-dev && \
-    # for nodejs
-    apt-get install -y python3 g++-12 gcc-12 make python3-pip
-
-# install docker
-RUN apt-get update && \
-    apt-get install -y ca-certificates curl && \
-    install -m 0755 -d /etc/apt/keyrings && \
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc && \
-    chmod a+r /etc/apt/keyrings/docker.asc && \
-    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" \
-        > /etc/apt/sources.list.d/docker.list && \
-    apt-get update && \
-    apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-
 ############################
 ### gpu setttings from #####
 ############################
@@ -40,9 +14,45 @@ RUN curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | gpg --dearm
     apt-get -y update && \
     apt-get install -y nvidia-container-toolkit && \
     nvidia-ctk runtime configure --runtime=docker
+
+# set cuda env vars
+ENV PATH="/usr/local/cuda/bin:$PATH"
+ENV LD_LIBRARY_PATH="/usr/local/cuda/lib64"
 ############################
 ### gpu setttings to   #####
 ############################
+
+# root user configuration
+## install language dependencies
+RUN apt-get update && \
+    # for python
+    apt-get install -y build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev \
+                       libsqlite3-dev curl git libncursesw5-dev xz-utils \
+                       tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev && \
+    # for ruby
+    apt-get install -y autoconf patch build-essential rustc libssl-dev \
+                       libyaml-dev libreadline6-dev zlib1g-dev libgmp-dev libncurses5-dev \
+                       libffi-dev libgdbm6 libgdbm-dev libdb-dev uuid-dev && \
+    # for nodejs
+    apt-get install -y python3 g++-12 gcc-12 make python3-pip
+
+## install docker
+RUN apt-get update && \
+    apt-get install -y ca-certificates curl && \
+    install -m 0755 -d /etc/apt/keyrings && \
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc && \
+    chmod a+r /etc/apt/keyrings/docker.asc && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" \
+        > /etc/apt/sources.list.d/docker.list && \
+    apt-get update && \
+    apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+## install terraform and packer
+RUN apt-get update && apt-get install -y gnupg software-properties-common && \
+    wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor > /usr/share/keyrings/hashicorp-archive-keyring.gpg && \
+    echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" \
+        > /etc/apt/sources.list.d/hashicorp.list && \
+    apt-get update && apt-get install terraform packer
 
 # vscode user configuration
 ## create the user
@@ -83,15 +93,5 @@ RUN pip install -r requirements.txt && rm -f requirements.txt && \
 ## install gem packages
 COPY Gemfile .
 RUN gem install bundle && bundle install
-
-############################
-### gpu setttings from #####
-############################
-# set cuda env vars
-ENV PATH="/usr/local/cuda/bin:$PATH"
-ENV LD_LIBRARY_PATH="/usr/local/cuda/lib64"
-############################
-### gpu setttings to   #####
-############################
 
 ENTRYPOINT [ "dockerd" ]
