@@ -26,6 +26,7 @@
 	"workspaceMount": "source=${localWorkspaceFolder},target=/home/${localEnv:USER}/workspace,type=bind,consistency=cached",
 	"mounts": [
 		"source=${localEnv:HOME}/.ssh,target=/home/${localEnv:USER}/.ssh,type=bind,consistency=cached",
+		"source=${localEnv:HOME}/.aws,target=/home/${localEnv:USER}/.aws,type=bind,consistency=cached",
 		"source=${localEnv:HOME}/.openstack,target=/home/${localEnv:USER}/.openstack,type=bind,consistency=cached",
 		"source=${localEnv:HOME}/.vscode-dind,target=/var/lib/docker,type=bind,consistency=cached"
 	],
