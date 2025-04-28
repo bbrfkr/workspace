@@ -25,7 +25,8 @@
 	"workspaceFolder": "/home/${localEnv:USER}/workspace",
 	"workspaceMount": "source=${localWorkspaceFolder},target=/home/${localEnv:USER}/workspace,type=bind,consistency=cached",
 	"mounts": [
-		"source=${localEnv:HOME}/.ssh,target=/home/${localEnv:USER}/.ssh,type=bind,consistency=cached",
+		"source=${localEnv:HOME}/.ssh,target=/tmp/.ssh,type=bind,consistency=cached",
+		"source=${localEnv:HOME}/.devcontainer-ssh,target=/home/${localEnv:USER}/.ssh,type=bind,consistency=cached",
 		"source=${localEnv:HOME}/.aws,target=/home/${localEnv:USER}/.aws,type=bind,consistency=cached",
 		"source=${localEnv:HOME}/.openstack,target=/home/${localEnv:USER}/.openstack,type=bind,consistency=cached",
 		"source=${localEnv:HOME}/.vscode-dind,target=/var/lib/docker,type=bind,consistency=cached"
@@ -33,5 +34,19 @@
 	"containerUser": "root",
 	"remoteUser": "${localEnv:USER}",
 	"overrideCommand": false,
-	"privileged": true
+	"privileged": true,
+	"initializeCommand": [
+		"mkdir",
+		"-p",
+		"${localEnv:HOME}/.ssh",
+		"${localEnv:HOME}/.devcontainer-ssh",
+		"${localEnv:HOME}/.aws",
+		"${localEnv:HOME}/.openstack",
+		"${localEnv:HOME}/.vscode-dind"
+	],
+	"onCreateCommand": [
+		"bash",
+		"-c",
+		"sudo cp -r /tmp/.ssh /home/${localEnv:USER}/.ssh && sudo chown ${localEnv:USER}:${localEnv:USER} -R /home/${localEnv:USER}/.ssh && sudo chmod 700 /home/${localEnv:USER}/.ssh && sudo chmod 600 /home/${localEnv:USER}/.ssh/*"
+	]
 }
