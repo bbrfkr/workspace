@@ -2,10 +2,7 @@
 	"name": "workspace-without-gpu",
 	"build": {		  
 		"dockerfile": "Dockerfile",
-		"context": ".",
-		"args": {
-			"USER": "${localEnv:USER}"
-		}
+		"context": "."
 	},
 	"customizations": {
 		"vscode": {
@@ -22,31 +19,29 @@
 			]
 		}
 	},
-	"workspaceFolder": "/home/${localEnv:USER}/workspace",
-	"workspaceMount": "source=${localWorkspaceFolder},target=/home/${localEnv:USER}/workspace,type=bind,consistency=cached",
+	"workspaceFolder": "/workspace",
+	"workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
 	"mounts": [
 		"source=${localEnv:HOME}/.ssh,target=/tmp/.ssh,type=bind,consistency=cached",
-		"source=${localEnv:HOME}/.devcontainer-ssh,target=/home/${localEnv:USER}/.ssh,type=bind,consistency=cached",
-		"source=${localEnv:HOME}/.aws,target=/home/${localEnv:USER}/.aws,type=bind,consistency=cached",
-		"source=${localEnv:HOME}/.openstack,target=/home/${localEnv:USER}/.openstack,type=bind,consistency=cached",
-		"source=${localEnv:HOME}/.vscode-dind,target=/var/lib/docker,type=bind,consistency=cached"
+		"source=${localEnv:HOME}/.aws,target=/tmp/.aws,type=bind,consistency=cached",
+		"source=${localEnv:HOME}/.openstack,target=/tmp/.openstack,type=bind,consistency=cached",
+		"source=${localEnv:HOME}/.dind-without-gpu,target=/var/lib/docker,type=bind,consistency=cached"
 	],
 	"containerUser": "root",
-	"remoteUser": "${localEnv:USER}",
+	"remoteUser": "devcontainer",
 	"overrideCommand": false,
 	"privileged": true,
 	"initializeCommand": [
 		"mkdir",
 		"-p",
-		"${localEnv:HOME}/.ssh",
-		"${localEnv:HOME}/.devcontainer-ssh",
+		"${localEnv:HOME}/.ssh/",
 		"${localEnv:HOME}/.aws",
 		"${localEnv:HOME}/.openstack",
-		"${localEnv:HOME}/.vscode-dind"
+		"${localEnv:HOME}/.dind-without-gpu"
 	],
 	"onCreateCommand": [
 		"bash",
 		"-c",
-		"sudo cp -r /tmp/.ssh /home/${localEnv:USER}/.ssh && sudo chown ${localEnv:USER}:${localEnv:USER} -R /home/${localEnv:USER}/.ssh && sudo chmod 700 /home/${localEnv:USER}/.ssh && sudo chmod 600 /home/${localEnv:USER}/.ssh/*"
+		"sudo cp -r /tmp/.* /home/devcontainer && sudo chown devcontainer:devcontainer -R /home/devcontainer"
 	]
 }

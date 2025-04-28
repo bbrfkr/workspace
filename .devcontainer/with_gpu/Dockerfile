@@ -55,13 +55,12 @@ RUN apt-get update && apt-get install -y gnupg software-properties-common && \
     apt-get update && apt-get install terraform packer
 
 # vscode user configuration
-## create the user
-ARG USER
-RUN useradd --home-dir /home/$USER --create-home $USER\
-    && echo $USER ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USER \
-    && chmod 0440 /etc/sudoers.d/$USER \
-    && cp /home/vscode/.bashrc /home/$USER \
-    && usermod -aG docker $USER
+## create the devcontainer user
+RUN useradd --home-dir /home/devcontainer --create-home devcontainer\
+    && echo devcontainer ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/devcontainer \
+    && chmod 0440 /etc/sudoers.d/devcontainer \
+    && cp /home/vscode/.bashrc /home/devcontainer \
+    && usermod -aG docker devcontainer
 
 ## install language
 RUN git clone --depth 1 https://github.com/pyenv/pyenv /var/lib/pyenv
@@ -70,7 +69,7 @@ RUN git clone --depth 1 https://github.com/rbenv/rbenv /var/lib/rbenv && \
 RUN git clone --depth 1 https://github.com/nodenv/nodenv /var/lib/nodenv && \
     git clone --depth 1 https://github.com/nodenv/node-build.git /var/lib/nodenv/plugins/node-build
 
-RUN chown $USER:$USER -R /var/lib/pyenv /var/lib/rbenv /var/lib/nodenv
+RUN chown devcontainer:devcontainer -R /var/lib/pyenv /var/lib/rbenv /var/lib/nodenv
 
 ENV PATH=/var/lib/pyenv/bin:/var/lib/rbenv/bin:/var/lib/nodenv/bin:$PATH
 ENV PYENV_ROOT=/var/lib/pyenv
