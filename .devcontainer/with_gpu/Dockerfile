@@ -61,16 +61,18 @@ RUN useradd --home-dir /home/devcontainer --create-home devcontainer\
     && chmod 0440 /etc/sudoers.d/devcontainer \
     && cp /home/vscode/.bashrc /home/devcontainer \
     && usermod -aG docker devcontainer
+USER devcontainer
+WORKDIR /home/devcontainer
 
 ## install language
-RUN git clone --depth 1 https://github.com/pyenv/pyenv /var/lib/pyenv
-RUN git clone --depth 1 https://github.com/rbenv/rbenv /var/lib/rbenv && \
-    git clone --depth 1 https://github.com/rbenv/ruby-build.git /var/lib/rbenv/plugins/ruby-build
-RUN git clone --depth 1 https://github.com/nodenv/nodenv /var/lib/nodenv && \
-    git clone --depth 1 https://github.com/nodenv/node-build.git /var/lib/nodenv/plugins/node-build
-RUN git clone --depth=1 https://github.com/tfutils/tfenv.git /var/lib/tfenv
+RUN sudo git clone --depth 1 https://github.com/pyenv/pyenv /var/lib/pyenv
+RUN sudo git clone --depth 1 https://github.com/rbenv/rbenv /var/lib/rbenv && \
+    sudo git clone --depth 1 https://github.com/rbenv/ruby-build.git /var/lib/rbenv/plugins/ruby-build
+RUN sudo git clone --depth 1 https://github.com/nodenv/nodenv /var/lib/nodenv && \
+    sudo git clone --depth 1 https://github.com/nodenv/node-build.git /var/lib/nodenv/plugins/node-build
+RUN sudo git clone --depth 1 https://github.com/tfutils/tfenv.git /var/lib/tfenv
 
-RUN chown devcontainer:devcontainer -R /var/lib/pyenv /var/lib/rbenv /var/lib/nodenv /var/lib/tfenv
+RUN sudo chown devcontainer:devcontainer -R /var/lib/pyenv /var/lib/rbenv /var/lib/nodenv /var/lib/tfenv
 
 ENV PATH=/var/lib/pyenv/bin:/var/lib/rbenv/bin:/var/lib/nodenv/bin:/var/lib/tfenv/bin:$PATH
 ENV PYENV_ROOT=/var/lib/pyenv
@@ -94,9 +96,10 @@ RUN pip install -r requirements.txt && rm -f requirements.txt && \
     pip uninstall -y python-zaqarclient
 
 ## install gem packages
-ARG USERNAME=devcontainer
-COPY .gemrc /home/${USERNAME}
+COPY .gemrc /home/devcontainer
 COPY Gemfile .
-RUN gem install bundle && bundle install
+RUN gem install bundle && bundle install && rm -f Gemfile
 
+# finalize configuration
+USER root
 ENTRYPOINT [ "dockerd" ]
