@@ -68,10 +68,11 @@ RUN git clone --depth 1 https://github.com/rbenv/rbenv /var/lib/rbenv && \
     git clone --depth 1 https://github.com/rbenv/ruby-build.git /var/lib/rbenv/plugins/ruby-build
 RUN git clone --depth 1 https://github.com/nodenv/nodenv /var/lib/nodenv && \
     git clone --depth 1 https://github.com/nodenv/node-build.git /var/lib/nodenv/plugins/node-build
+RUN git clone --depth=1 https://github.com/tfutils/tfenv.git /var/lib/tfenv
 
-RUN chown devcontainer:devcontainer -R /var/lib/pyenv /var/lib/rbenv /var/lib/nodenv
+RUN chown devcontainer:devcontainer -R /var/lib/pyenv /var/lib/rbenv /var/lib/nodenv /var/lib/tfenv
 
-ENV PATH=/var/lib/pyenv/bin:/var/lib/rbenv/bin:/var/lib/nodenv/bin:$PATH
+ENV PATH=/var/lib/pyenv/bin:/var/lib/rbenv/bin:/var/lib/nodenv/bin:/var/lib/tfenv/bin:$PATH
 ENV PYENV_ROOT=/var/lib/pyenv
 ENV RBENV_ROOT=/var/lib/rbenv
 ENV NODENV_ROOT=/var/lib/nodenv
@@ -82,7 +83,10 @@ RUN nodenv install 20.19.0
 
 ENV PATH=/var/lib/pyenv/shims:/var/lib/rbenv/shims:/var/lib/nodenv/shims:$PATH
 
-RUN pyenv global 3.11 && rbenv global 3.3.8 && nodenv global 20.19.0
+RUN pyenv global 3.11 && \
+    rbenv global 3.3.8 && \
+    nodenv global 20.19.0 && \
+    tfenv use 1.7.0
 
 ## install pip packages
 COPY requirements.txt .
@@ -90,6 +94,8 @@ RUN pip install -r requirements.txt && rm -f requirements.txt && \
     pip uninstall -y python-zaqarclient
 
 ## install gem packages
+ARG USERNAME=devcontainer
+COPY .gemrc /home/${USERNAME}
 COPY Gemfile .
 RUN gem install bundle && bundle install
 
