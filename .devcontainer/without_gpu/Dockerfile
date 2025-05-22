@@ -23,7 +23,7 @@ RUN apt-get update && \
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" \
         > /etc/apt/sources.list.d/docker.list && \
     apt-get update && \
-    apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+    apt-get install -y docker-ce-cli docker-buildx-plugin docker-compose-plugin
 
 ## install terraform and packer
 RUN apt-get update && apt-get install -y gnupg software-properties-common && \
@@ -37,8 +37,7 @@ RUN apt-get update && apt-get install -y gnupg software-properties-common && \
 RUN useradd --home-dir /home/devcontainer --create-home devcontainer\
     && echo devcontainer ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/devcontainer \
     && chmod 0440 /etc/sudoers.d/devcontainer \
-    && cp /home/vscode/.bashrc /home/devcontainer \
-    && usermod -aG docker devcontainer
+    && cp /home/vscode/.bashrc /home/devcontainer
 USER devcontainer
 WORKDIR /home/devcontainer
 
@@ -80,4 +79,4 @@ RUN gem install bundle && bundle install && rm -f Gemfile
 
 # finalize configuration
 USER root
-ENTRYPOINT [ "dockerd" ]
+ENTRYPOINT [ "sleep", "infinity" ]

@@ -24,8 +24,7 @@
 	"mounts": [
 		"source=${localEnv:HOME}/.ssh,target=/tmp/.ssh,type=bind,consistency=cached",
 		"source=${localEnv:HOME}/.aws,target=/tmp/.aws,type=bind,consistency=cached",
-		"source=${localEnv:HOME}/.openstack,target=/tmp/.openstack,type=bind,consistency=cached",
-		"source=${localEnv:HOME}/.dind-without-gpu,target=/var/lib/docker,type=bind,consistency=cached"
+		"source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind,consistency=cached"
 	],
 	"containerUser": "root",
 	"remoteUser": "devcontainer",
@@ -35,9 +34,7 @@
 		"mkdir",
 		"-p",
 		"${localEnv:HOME}/.ssh/",
-		"${localEnv:HOME}/.aws",
-		"${localEnv:HOME}/.openstack",
-		"${localEnv:HOME}/.dind-without-gpu"
+		"${localEnv:HOME}/.aws"
 	],
 	"onCreateCommand": [
 		"bash",
