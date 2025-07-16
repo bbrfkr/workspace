@@ -3,11 +3,13 @@ FROM mcr.microsoft.com/devcontainers/base:noble
 ### gpu setttings from #####
 ############################
 # install cuda and container-tool-kit
-RUN wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-keyring_1.1-1_all.deb && \
-    dpkg -i cuda-keyring_1.1-1_all.deb && \
-    rm -f cuda-keyring_1.1-1_all.deb && \
-    apt-get update && \
-    apt-get -y install cuda-12-6
+RUN wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-keyring_1.1-1_all.deb
+    dpkg -i cuda-keyring_1.1-1_all.deb
+    rm -f cuda-keyring_1.1-1_all.deb
+    apt-get update
+    apt-get -y install nvidia-open
+    apt-get -y install cuda-toolkit
+    apt-get -y install nvidia-gds
 RUN curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg && \
     curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \
     sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' > /etc/apt/sources.list.d/nvidia-container-toolkit.list && \
