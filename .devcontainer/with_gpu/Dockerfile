@@ -2,6 +2,10 @@ FROM mcr.microsoft.com/devcontainers/base:noble
 ############################
 ### gpu setttings from #####
 ############################
+# install linux headers
+RUN apt-get update && \
+    apt-get -y install linux-headers
+
 # install cuda and container-tool-kit
 RUN wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-keyring_1.1-1_all.deb && \
     dpkg -i cuda-keyring_1.1-1_all.deb && \
