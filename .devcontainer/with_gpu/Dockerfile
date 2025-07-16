@@ -4,7 +4,7 @@ FROM mcr.microsoft.com/devcontainers/base:noble
 ############################
 # install linux headers
 RUN apt-get update && \
-    apt-get -y install linux-headers
+    apt-get -y install linux-headers-$(uname -r)
 
 # install cuda and container-tool-kit
 RUN wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-keyring_1.1-1_all.deb && \
