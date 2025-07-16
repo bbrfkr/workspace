@@ -1,5 +1,5 @@
 {
-	"name": "workspace-with-gpu",
+	"name": "workspace",
 	"build": {		  
 		"dockerfile": "Dockerfile",
 		"context": "."
@@ -7,10 +7,9 @@
 	"customizations": {
 		"vscode": {
 			"settings": {
-				"rubyLsp.bundleGemfile": ".devcontainer/with_gpu/Gemfile"
+				"rubyLsp.bundleGemfile": ".devcontainer/without_cuda/Gemfile"
 			},
 			"extensions": [
-				"saoudrizwan.claude-dev",
 				"continue.continue",
 				"-github.copilot",
 				"-github.copilot-chat",
@@ -28,7 +27,7 @@
 		"source=${localEnv:HOME}/.ssh,target=/tmp/.ssh,type=bind,consistency=cached",
 		"source=${localEnv:HOME}/.aws,target=/tmp/.aws,type=bind,consistency=cached",
 		"source=${localEnv:HOME}/.openstack,target=/tmp/.openstack,type=bind,consistency=cached",
-		"source=${localEnv:HOME}/.dind-with-gpu,target=/var/lib/docker,type=bind,consistency=cached"
+		"source=${localEnv:HOME}/.dind-without-cuda,target=/var/lib/docker,type=bind,consistency=cached"
 	],
 	"containerUser": "root",
 	"remoteUser": "devcontainer",
@@ -40,15 +39,11 @@
 		"${localEnv:HOME}/.ssh/",
 		"${localEnv:HOME}/.aws",
 		"${localEnv:HOME}/.openstack",
-		"${localEnv:HOME}/.dind-with-gpu"
+		"${localEnv:HOME}/.dind-without-cuda"
 	],
 	"onCreateCommand": [
 		"bash",
 		"-c",
 		"sudo cp -r /tmp/.* /home/devcontainer && sudo chown devcontainer:devcontainer -R /home/devcontainer"
-	],
-	"runArgs": [
-		"--gpus",
-		"all"
 	]
 }
