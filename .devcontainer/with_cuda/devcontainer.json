@@ -10,6 +10,7 @@
 				"rubyLsp.bundleGemfile": ".devcontainer/with_cuda/Gemfile"
 			},
 			"extensions": [
+				"saoudrizwan.claude-dev",
 				"continue.continue",
 				"-github.copilot",
 				"-github.copilot-chat",
