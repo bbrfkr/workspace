@@ -78,6 +78,10 @@ COPY .gemrc /home/devcontainer
 COPY Gemfile .
 RUN gem install bundle && bundle install && rm -f Gemfile
 
+## install tools
+RUN sudo apt-get update && \
+    sudo apt-get -y install vim jq netcat-openbsd iputils-ping
+
 # finalize configuration
 USER root
 ENTRYPOINT [ "dockerd" ]
