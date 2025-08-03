@@ -28,7 +28,9 @@
 		"source=${localEnv:HOME}/.ssh,target=/tmp/.ssh,type=bind,consistency=cached",
 		"source=${localEnv:HOME}/.aws,target=/tmp/.aws,type=bind,consistency=cached",
 		"source=${localEnv:HOME}/.openstack,target=/tmp/.openstack,type=bind,consistency=cached",
-		"source=${localEnv:HOME}/.dind-without-cuda,target=/var/lib/docker,type=bind,consistency=cached"
+		"source=${localEnv:HOME}/.qwen,target=/tmp/.qwen,type=bind,consistency=cached",
+		"source=${localEnv:HOME}/.dind-without-cuda,target=/var/lib/docker,type=bind,consistency=cached",
+		"source=${localEnv:HOME}/.bash_history,target=/home/devcontainer/.bash_history,type=bind,consistency=cached"
 	],
 	"containerUser": "root",
 	"remoteUser": "devcontainer",

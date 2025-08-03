@@ -95,6 +95,10 @@ COPY .gemrc /home/devcontainer
 COPY Gemfile .
 RUN gem install bundle && bundle install && rm -f Gemfile
 
+## install npm packages
+RUN npm install -g @qwen-code/qwen-code@latest
+RUN nodenv rehash
+
 ## install tools
 RUN sudo apt-get update && \
     sudo apt-get -y install vim jq netcat-openbsd iputils-ping
