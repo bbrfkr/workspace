@@ -1,0 +1,19 @@
+{
+	"name": "workspace",
+	"build": {		  
+		"dockerfile": "Dockerfile",
+		"context": "."
+	},
+	"workspaceFolder": "/workspace",
+	"workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
+	"mounts": [
+		"source=${localEnv:HOME}/.ssh,target=/tmp/.ssh,type=bind,consistency=cached",
+		"source=${localEnv:HOME}/.aws,target=/home/vscode/.aws,type=bind,consistency=cached",
+		"source=${localEnv:HOME}/.openstack,target=/home/vscode/.openstack,type=bind,consistency=cached"
+	],
+	"onCreateCommand": [
+		"bash",
+		"-c",
+		"rm -rf /home/vscode/.ssh && cp -r /tmp/.ssh /home/vscode && sudo chown vscode:vscode -R /home/vscode/.ssh"
+	]
+}

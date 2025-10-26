@@ -8,10 +8,3 @@ python-manilaclient
 python-octaviaclient
 python-troveclient
 awscli_plugin_endpoint
-
-# python tools
-black
-isort
-mypy
-flake8
-poetry
