@@ -1,0 +1,7 @@
+# Dockerignore for mcp_servers
+# Exclude all files by default to keep image builds lightweight
+*
+# Allow Dockerfiles and any scripts they may reference
+!*/Dockerfile
+!*/scripts/**
+!README.md

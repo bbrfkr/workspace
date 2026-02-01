@@ -1,6 +1,9 @@
 *
 !.devcontainer
+!.devcontainer/*
+!projects
 !projects/.gitkeep
 !mcp_servers
+!mcp_servers/**/*
 !.gitignore
 !readme.md
