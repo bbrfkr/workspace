@@ -3,7 +3,7 @@
 !.devcontainer/**/*
 !projects
 !projects/.gitkeep
-!code-workspaces
-!code-workspaces/.gitkeep
+!mcp_servers
+!mcp_servers/.gitkeep
 !.gitignore
 !readme.md
