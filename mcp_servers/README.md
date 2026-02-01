@@ -25,10 +25,10 @@ cd mcp_servers
 make            # すべてのイメージをビルド
 ```
 
-個別にビルドしたい場合は、対象ディレクトリで `docker build` を実行してください。
+個別にビルドしたい場合は、`make <対象ディレクトリ名>` を実行してください。
 
 ```bash
-docker build -t example-python-mcp ./example-python
+make example-python
 ```
 
 ## クリーンアップ
@@ -37,6 +37,12 @@ docker build -t example-python-mcp ./example-python
 
 ```bash
 make clean
+```
+
+個別に削除したいときは、`make clean-<対象ディレクトリ名>` を実行してください。
+
+```bash
+make clean-example-python
 ```
 
 ## 追加サーバーの作成方法

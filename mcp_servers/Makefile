@@ -1,7 +1,7 @@
 # Makefile to build MCP server Docker images
 
 # Detect sub‑directories that contain a Dockerfile (one level deep)
-MCPS := $(patsubst ./%%/Dockerfile,%%,$(shell find . -mindepth 2 -maxdepth 2 -name Dockerfile))
+MCPS := $(shell find . -mindepth 2 -maxdepth 2 -name Dockerfile)
 MCP_DIRS := $(patsubst ./%/Dockerfile,%,$(shell find . -mindepth 2 -maxdepth 2 -name Dockerfile))
 
 # Default target builds every detected server image
