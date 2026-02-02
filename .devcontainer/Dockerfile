@@ -77,7 +77,6 @@ ENV TOFUENV=/home/vscode/.tofuenv
 RUN git clone --depth 1 https://github.com/tofuutils/tofuenv $TOFUENV
 ENV PATH=$TOFUENV/bin:$PATH
 RUN tofuenv use 1.10.6
-RUN sudo ln -s /home/vscode/.tofuenv/bin/tofu /usr/bin/terraform
 
 # install packer
 RUN sudo apt-get update && sudo apt-get install -y gnupg software-properties-common && \
@@ -95,10 +94,30 @@ RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-$(uname -i).zip" -o "/tm
 # fix awscli v1 to aws-v1
 RUN mv /home/vscode/.venv/bin/aws /home/vscode/.venv/bin/aws-v1
 
-
+# install gcloud
 RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | \
     sudo gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg && \
     echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | \
     sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
     sudo apt-get update && \
     sudo apt-get -y install google-cloud-cli
+
+# install playwright deps
+RUN sudo apt-get -y install \
+        libatk1.0-0t64\
+        libatk-bridge2.0-0t64\
+        libcups2t64\
+        libxcomposite1\
+        libxdamage1\
+        libxfixes3\
+        libxrandr2\
+        libgbm1\
+        libxkbcommon0\
+        libpango-1.0-0\
+        libcairo2\
+        libasound2t64\
+        libatspi2.0-0t64       
+
+# install mise
+RUN curl https://mise.run | sh && \
+    echo 'eval "$(~/.local/bin/mise activate bash)"' >> ~/.bashrc
