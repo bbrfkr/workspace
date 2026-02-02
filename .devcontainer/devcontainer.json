@@ -4,12 +4,14 @@
 		"dockerfile": "Dockerfile",
 		"context": "."
 	},
-	"workspaceFolder": "/workspace",
-	"workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
+	"workspaceFolder": "${localWorkspaceFolder}",
+	"workspaceMount": "source=${localWorkspaceFolder},target=${localWorkspaceFolder},type=bind,consistency=cached",
 	"mounts": [
 		"source=${localEnv:HOME}/.ssh,target=/tmp/.ssh,type=bind,consistency=cached",
 		"source=${localEnv:HOME}/.aws,target=/home/vscode/.aws,type=bind,consistency=cached",
+		"source=${localEnv:HOME}/.config/gcloud,target=/home/vscode/.config/gcloud,type=bind,consistency=cached",
 		"source=${localEnv:HOME}/.codex,target=/home/vscode/.codex,type=bind,consistency=cached",
+		"source=${localEnv:HOME}/.claude,target=/home/vscode/.claude,type=bind,consistency=cached",
 		"source=${localEnv:HOME}/.openstack,target=/home/vscode/.openstack,type=bind,consistency=cached",
 		"source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind,consistency=cached",
 		"source=${localEnv:HOME}/.bash_history,target=/home/vscode/.bash_history,type=bind,consistency=cached"

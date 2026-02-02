@@ -68,8 +68,8 @@ RUN sudo apt-get update && \
     sudo apt-get -y install docker-ce-cli docker-buildx-plugin docker-compose-plugin && \
     sudo rm -rf /var/lib/apt/lists/*
 
-# install Codex CLI via npm
-RUN npm install -g @openai/codex
+# install coding agent
+RUN npm install -g @openai/codex @anthropic-ai/claude-code
 RUN nodenv rehash
 
 # install tofuenv and opentofu
@@ -79,9 +79,26 @@ ENV PATH=$TOFUENV/bin:$PATH
 RUN tofuenv use 1.10.6
 RUN sudo ln -s /home/vscode/.tofuenv/bin/tofu /usr/bin/terraform
 
-## install packer
+# install packer
 RUN sudo apt-get update && sudo apt-get install -y gnupg software-properties-common && \
     wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor | sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg && \
     echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | \
         sudo tee /etc/apt/sources.list.d/hashicorp.list && \
     sudo apt-get update && sudo apt-get install packer
+
+# install awscli
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-$(uname -i).zip" -o "/tmp/awscliv2.zip" && \
+    cd /tmp && \
+    unzip awscliv2.zip && \
+    sudo ./aws/install && \
+    rm -rf ./aws*
+# fix awscli v1 to aws-v1
+RUN mv /home/vscode/.venv/bin/aws /home/vscode/.venv/bin/aws-v1
+
+
+RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | \
+    sudo gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg && \
+    echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | \
+    sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
+    sudo apt-get update && \
+    sudo apt-get -y install google-cloud-cli

@@ -8,3 +8,4 @@ python-manilaclient
 python-octaviaclient
 python-troveclient
 awscli_plugin_endpoint
+aws2-wrap
